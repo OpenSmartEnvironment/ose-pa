@@ -15,8 +15,10 @@ from datetime import datetime, timedelta
 
 GObject.threads_init()
 
-#def quack(value):
-#    sys.stderr.write(repr(value) + '\n')
+def quack(text, value):
+#    sys.stderr.write()
+    with open("/tmp/quack", "a") as myfile:
+        myfile.write(text + ' ' + repr(value) + '\n')
 
 class Player(object):
     def __init__(self):
@@ -28,16 +30,21 @@ class Player(object):
 
     def run(self):
         self.last_ping = datetime.now()
-        GLib.timeout_add_seconds(60, self.timeout_handler)
+#        GLib.timeout_add_seconds(10, self.timeout_handler)
 
         self.mainloop = GLib.MainLoop(None)
         self.mainloop.run()
 
     def timeout_handler(self):
-        if (self.last_ping + timedelta(seconds=120)) < datetime.now():
-            self.mainloop.quit()
-        else:
-            GLib.timeout_add_seconds(60, self.timeout_handler)
+        # TODO: Ugly workaround of problem with orphaned child
+        self.mainloop.quit()
+        GLib.timeout_add_seconds(1, self.timeout_handler)
+
+
+#        if (self.last_ping + timedelta(seconds=20)) < datetime.now():
+#            self.mainloop.quit()
+#        else:
+#            GLib.timeout_add_seconds(10, self.timeout_handler)
 
     def prepare_dbus(self):
         DBusGMainLoop(set_as_default=True)
@@ -93,8 +100,6 @@ class Player(object):
                     'org.PulseAudio.Core1.Stream.' + sig_name,
                     dbus.Array(signature='o')
                 )
-
-            #quack(property_list.keys())
 
         self.return_data()
 
@@ -266,43 +271,42 @@ class Player(object):
         stream.Set('org.PulseAudio.Core1.Stream', 'Volume', [dbus.UInt32(data['volume'])], dbus_interface='org.freedesktop.DBus.Properties')
 
     def on_stdin_bytes(self, source, result, data):
-        finish = self.input.read_bytes_finish(result)
+        res = self.input.read_bytes_finish(result)
 
-        if finish == 0:
-#            quack('******** COMMIT SUICIDE ********')
-            self.mainloop.quit()
-            return
-        elif finish == -1:
-#            quack('******** ERROR ********')
-            self.mainloop.quit()
-        else:
-            # TODO: Merge more inputs before parsing.
-            data = filter(None, str(finish.get_data(), encoding='utf8').split('\n'))
+        # TODO: Merge more inputs before parsing.
+        data = str(res.get_data(), encoding='utf8')
 
-            for text in data:
-                try:
-                    obj = json.loads(text)
-                except:
-                    print('ERROR PARSING: ', text, file=sys.stderr)
+        if data == '':
+            GLib.timeout_add_seconds(1, self.timeout_handler)
+            return None
 
-                for key in obj.keys():
-                    if key == 'ping':
-                        self.last_ping = datetime.now()
-                        print(json.dumps({'pong': 1}))
+        data = filter(None, data.split('\n'))
 
-                    elif key == 'mute':
-                        self.set_mute(obj[key])
+        for text in data:
+            try:
+                obj = json.loads(text)
+            except:
+                print('ERROR PARSING: ', text, file=sys.stderr)
 
-                    elif key == 'volume':
-                        self.set_volume(obj[key])
+            for key in obj.keys():
+                if key == 'ping':
+                    self.last_ping = datetime.now()
+                    print(json.dumps({'pong': 1}))
 
-                    elif key == 'streamMute':
-                        self.set_stream_mute(obj[key])
+                elif key == 'mute':
+                    self.set_mute(obj[key])
 
-                    elif key == 'streamVolume':
-                        self.set_stream_volume(obj[key])
+                elif key == 'volume':
+                    self.set_volume(obj[key])
 
-            self.input.read_bytes_async(16384, 0, self.cancellable, self.on_stdin_bytes, None)
+                elif key == 'streamMute':
+                    self.set_stream_mute(obj[key])
+
+                elif key == 'streamVolume':
+                    self.set_stream_volume(obj[key])
+
+        res = self.input.read_bytes_async(16384, 0, self.cancellable, self.on_stdin_bytes, None)
+
 
 p = Player()
 p.run()
