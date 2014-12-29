@@ -1,8 +1,12 @@
-# Open Smart Environment PulseAudio package
+# Open Smart Environment - PulseAudio
+This package is a part of OSE suite.
+The main advantage of OSE is the easy creation of applications
+consisting of multiple instances working as a single whole. The
+objective is to develop an all-encompassing personal mesh running
+various devices including HTPCs, phones, tablets, workstations,
+servers, Raspberry Pis, home automation gadgets, wearables, drones etc.
 
-This package implements volume control for the [OSE Media player](http://opensmartenvironment.github.io/doc/modules/media.html).
-
-See [bundle.media](http://opensmartenvironment.github.io/doc/modules/bundle.media.html) example application
+For more information about OSE see **the [documentation](http://opensmartenvironment.github.io/doc/)**.
 
 ## Status
 - Pre-alpha stage (insecure and buggy)
@@ -16,48 +20,23 @@ to understand the basic principles covered by the
 
 Use of this software is currently recommended only for users that
 wish participate in the development process, see
-[Contributions](#contributions).
+[contributions](http://opensmartenvironment.github.io/doc/#contrib).
 
-## Getting started
-To get started with OSE, refer to the [ose-bundle](http://opensmartenvironment.github.io/doc/modules/bundle.html) package and
-[Media player example application](http://opensmartenvironment.github.io/doc/modules/bundle.media.html). You can read the entire OSE
-documentation [here]( http://opensmartenvironment.github.io/doc).
+## Platforms
+OSE is developed in JavaScript on the following platforms.
+- Node.js (>0.10) running on Debian Jessie and Raspbian
+- recent versions of Firefox
+- recent versions of Chromium/Chrome
 
-## Modules
-Open Smart Environment PulseAudio package consists of the following modules:
-- PulseAudio control kind
-- OSE PulseAudio core
-- OSE PulseAudio content
+It, however, probably also runs on other recent browsers and Linux
+distributions.
 
-### PulseAudio control kind
-[Entry kind](http://opensmartenvironment.github.io/doc/classes/ose.lib.kind.html) for PulseAudio instances
+## Package description
+This package implements volume control for the [Media player].
 
-Each entry communicates with PulseAudio via its D-Bus
-interface. This functionality is currently implemented in a Python
-child process.
+See [Media player example].
 
-Module [PulseAudio control kind](http://opensmartenvironment.github.io/doc/classes/pa.lib.dbus.html) reference ... 
-
-### OSE PulseAudio core
-Core singleton of ose-pa npm package. Registers [entry kinds](http://opensmartenvironment.github.io/doc/classes/ose.lib.kind.html)
-defined by this package to the `"control"` [scope](http://opensmartenvironment.github.io/doc/classes/ose.lib.scope.html).
-
-Module [OSE PulseAudio core](http://opensmartenvironment.github.io/doc/classes/pa.lib.html) reference ... 
-
-### OSE PulseAudio content
-Provides files of OSE PulseAudio package to the browser.
-
-Module [OSE PulseAudio content](http://opensmartenvironment.github.io/doc/classes/pa.content.html) reference ... 
-
-## <a name="contributions"></a>Contributions
-To get started contributing or coding, it is good to read about the
-two main npm packages [ose](http://opensmartenvironment.github.io/doc/modules/ose.html) and [ose-bb](http://opensmartenvironment.github.io/doc/modules/bb.html).
-
-This software is in the pre-alpha stage. At the moment, it is
-premature to file bugs. Input is, however, much welcome in the form
-of ideas, comments and general suggestions.  Feel free to contact
-us via
-[github.com/opensmartenvironment](https://github.com/opensmartenvironment).
+The documentation for "ose-pa" package can be found **[here](http://opensmartenvironment.github.io/doc/#ose-pa#)**.
 
 ## Licence
 This software is released under the terms of the [GNU General

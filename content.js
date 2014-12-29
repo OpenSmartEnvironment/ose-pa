@@ -10,10 +10,10 @@ exports = require('ose')
  */
 
 /**
- * @caption OSE PulseAudio content
+ * @caption PulseAudio content
  *
  * @readme
- * Provides files of OSE PulseAudio package to the browser.
+ * Provides files of [ose-pa] package to the browser.
  *
  * @class pa.content
  * @type singleton
