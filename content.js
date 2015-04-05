@@ -24,8 +24,5 @@ function Init() {
 
   this.addModule('lib/index');
   this.addModule('lib/dbus/index');
-  this.addModule('lib/dbus/bb/detail');
   this.addModule('lib/stream/index');
-  this.addModule('lib/stream/bb/listDetail');
 };
-
